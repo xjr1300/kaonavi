@@ -4,7 +4,7 @@ from typing import Dict
 import requests
 from requests.auth import HTTPBasicAuth
 
-from kaonavi.data import KAONAVI_API_END_POINT
+from kaonavi.data import KAONAVI_API_END_POINT, KAONAVI_API_TIMEOUT
 
 
 def get_token(consumer_key: str, consumer_secret: str) -> Dict:
@@ -27,6 +27,7 @@ def get_token(consumer_key: str, consumer_secret: str) -> Dict:
         auth=HTTPBasicAuth(consumer_key, consumer_secret),
         data="grant_type=client_credentials",
         headers={"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"},
+        timeout=KAONAVI_API_TIMEOUT,
     )
     return response.json()
 
@@ -48,5 +49,6 @@ def get_sheet(access_token: str, sheet_id: int) -> Dict:
             "Content-Type": "application/json",
             "Kaonavi-Token": access_token,
         },
+        timeout=KAONAVI_API_TIMEOUT,
     )
     return response.json()
