@@ -4,8 +4,6 @@ from typing import Dict
 import requests
 from requests.auth import HTTPBasicAuth
 
-from kaonavi.data import KAONAVI_API_END_POINT, KAONAVI_API_TIMEOUT
-
 
 def get_token(consumer_key: str, consumer_secret: str) -> Dict:
     """カオナビからアクセス・トークンを取得する。

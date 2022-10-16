@@ -1,18 +1,13 @@
 from typing import Dict
 
-from kaonavi.data import QUALIFICATION_SHEET_ID
-from kaonavi.api import get_token, get_sheet
 
-
-def doit(consumer_key: str, consumer_secret: str) -> Dict:
-    """保有資格情報を取得する。
+def get_sheet(args) -> Dict:
+    """シート情報を取得する。
 
     Args:
-        consumer_key: カオナビで得られるコンシューマー・キー。
-        consumer_secret: カオナビで得られるコンシューマー・シークレット。
+        args:
     """
-    credentials = get_token(consumer_key, consumer_secret)
-    return get_sheet(credentials["access_token"], QUALIFICATION_SHEET_ID)
+    print(args)
 
 
 if __name__ == "__main__":
@@ -24,17 +19,22 @@ if __name__ == "__main__":
         Returns:
             コマンドライン引数を解析するパーサー。
         """
-        parser = ArgumentParser(description="カオナビから、全社員の保有資格を取得します。")
-        parser.add_argument("consumer_key", type=str, help="カオナビで得られるコンシューマー・キー。")
-        parser.add_argument(
-            "consumer_secret", type=str, help="カオナビで得られるコンシューマー・シークレット。"
-        )
+        parser = ArgumentParser(description="カオナビにAPIをリクエストします。")
+        subparsers = parser.add_subparsers()
+
+        # シート情報取得APIをリクエストするサブコマンド
+        sheet_command = subparsers.add_parser('sheet', help="シート情報取得APIをリクエストします。")
+        sheet_command.add_argument('sheet_id', type=int, help="取得するシートのシートID。")
+        sheet_command.set_defaults(func=get_sheet)
+
         return parser
 
     def main():
         parser = gen_argument_parser()
         args = parser.parse_args()
-        qualifications = doit(args.consumer_key, args.consumer_secret)
-        print(qualifications)
+        if hasattr(args, "func"):
+            args.func(args)
+        else:
+            parser.print_help()
 
     main()
