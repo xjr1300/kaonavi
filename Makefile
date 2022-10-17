@@ -1,6 +1,7 @@
 lint:
-	black --check .
+	flake8 kaonavi
+	black --check kaonavi
 
 fmt:
-	isort .
-	black .
+	isort kaonavi
+	black kaonavi
