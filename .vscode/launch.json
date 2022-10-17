@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: 現在のファイル",
+            "name": "Python: kaonavi",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "kaonavi",
+            "env": {"PYTHONPATH": "${workspaceFolder}"},
             "console": "integratedTerminal",
             "args": ["sheet", "97"],
-            "justMyCode": true
         }
     ]
 }

@@ -1,11 +1,5 @@
 {
-    "files.exclude": {
-        "**/__pycache__": true
-    },
     "cSpell.words": [
         "kaonavi"
     ],
-    "terminal.integrated.env.linux": {
-        "PYTHONPATH": "${workspaceFolder}/kaonavi"
-    }
 }

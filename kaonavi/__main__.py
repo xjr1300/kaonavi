@@ -1,15 +1,14 @@
 import os
 import sys
 from typing import Dict
+from pprint import pprint
 
 from dotenv import load_dotenv
 from argparse import ArgumentParser
 
-from .subcommands import KaonaviApiException, get_token
+from .subcommands import KAONAVI_REQUEST_TIMEOUT, KaonaviApiException, get_token
 from .subcommands.sheets import get_sheet
 
-# カオナビのAPIをリクエストするときのタイムアウト秒
-KAONAVI_REQUEST_TIMEOUT = 30
 
 # 環境変数を読み込み
 load_dotenv()
@@ -159,7 +158,8 @@ if __name__ == "__main__":
             )
             access_token = credentials["access_token"]
             # サブコマンドを実行
-            args.func(args, access_token, endpoint, timeout)
+            result = args.func(args, access_token, endpoint, timeout)
+            pprint(result)
         else:
             parser.print_help()
 

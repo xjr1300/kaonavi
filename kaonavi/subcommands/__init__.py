@@ -3,6 +3,9 @@ from typing import Dict, Optional
 import requests
 from requests.auth import HTTPBasicAuth
 
+# カオナビのAPIをリクエストするときのタイムアウト秒
+KAONAVI_REQUEST_TIMEOUT = 30
+
 
 class KaonaviApiException(Exception):
     """カオナビAPI例外"""
@@ -14,9 +17,9 @@ def call_kaonavi_api(
     url: str,
     method: str,
     access_token: str,
-    headers_ext: Optional[Dict],
-    data: Optional[Dict],
-    timeout: int,
+    headers_ext: Optional[Dict] = None,
+    data: Optional[Dict] = None,
+    timeout: int = KAONAVI_REQUEST_TIMEOUT,
 ) -> requests.Response:
     """カオナビAPIをリクエストする。
 
@@ -67,6 +70,7 @@ def get_token(
         KaonaviApiException:
             認証に失敗しました。
             アクセス・トークンの発行が制限されました。
+            不明なエラーが発生しました。
     """
     url = f"{endpoint}token"
     response = requests.post(
