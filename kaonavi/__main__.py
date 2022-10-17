@@ -5,22 +5,13 @@ from typing import Dict
 from dotenv import load_dotenv
 from argparse import ArgumentParser, Namespace
 
+from kaonavi.subcommands.sheets import get_sheet
+
 # カオナビのAPIをリクエストするときのタイムアウト秒
 KAONAVI_REQUEST_TIMEOUT = 30
 
 # 環境変数を読み込み
 load_dotenv()
-
-
-def get_sheet(args: Namespace, consumer_key: str, consumer_secret: str) -> Dict:
-    """シート情報を取得する。
-
-    Args:
-        args:
-    """
-    print(args)
-    print(consumer_key)
-    print(consumer_secret)
 
 
 def get_input(msg: str) -> str:
@@ -82,11 +73,12 @@ def get_end_point_url() -> str:
     Returns:
         カオナビのAPIエンドポイント。
     """
-    key = "KAONAVI_API_ENDPOINT_URL"
-    endpoint_url = os.getenv(key)
-    if endpoint_url == "":
+    key = "KAONAVI_API_ENDPOINT"
+    endpoint = os.getenv(key, "")
+    if endpoint == "":
         print(f"環境変数にカオナビAPIのエンドポイント({key})が設定されていません。", file=sys.stderr)
         exit(1)
+    return endpoint
 
 
 def get_request_timeout() -> int:
@@ -95,7 +87,7 @@ def get_request_timeout() -> int:
     環境変数からカオナビのAPIをリクエストするときのタイムアウト秒を取得できなかった場合は、デフォルトの
     タイムアウト秒を返却する。
     """
-    timeout = os.getenv("KAONAVI_REQUEST_TIMEOUT")
+    timeout = os.getenv("KAONAVI_API_TIMEOUT", "")
     try:
         timeout = int(timeout)
     except ValueError:
@@ -130,13 +122,11 @@ if __name__ == "__main__":
             # コンシューマー・シークレットを取得
             consumer_secret = get_consumer_secret()
             # カオナビAPIエンドポイントURLを取得
-            endpoint_url = get_end_point_url()
+            endpoint = get_end_point_url()
             # カオナビAPIリクエストタイムアウト秒を取得
-            request_timeout = get_request_timeout()
+            timeout = get_request_timeout()
             # サブコマンドを実行
-            args.func(
-                args, consumer_key, consumer_secret, endpoint_url, request_timeout
-            )
+            args.func(args, consumer_key, consumer_secret, endpoint, timeout)
         else:
             parser.print_help()
 
