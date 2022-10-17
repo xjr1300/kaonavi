@@ -3,9 +3,10 @@ import sys
 from typing import Dict
 
 from dotenv import load_dotenv
-from argparse import ArgumentParser, Namespace
+from argparse import ArgumentParser
 
-from kaonavi.subcommands.sheets import get_sheet
+from subcommands import KaonaviApiException, get_token
+from subcommands.sheets import get_sheet
 
 # カオナビのAPIをリクエストするときのタイムアウト秒
 KAONAVI_REQUEST_TIMEOUT = 30
@@ -95,6 +96,34 @@ def get_request_timeout() -> int:
     return timeout
 
 
+def get_access_token(
+    consumer_key: str, consumer_secret: str, endpoint: str, timeout: int
+) -> Dict:
+    """カオナビからアクセス・トークンを取得する。
+
+    カオナビにトークンをリクエストして、アクセス・トークンを取得する。
+    アクセス・トークンの取得に失敗した場合は、プログラムを終了する。
+
+    Args:
+        consumer_key: カオナビのコンシューマー・キー。
+        consumer_secret: カオナビのコンシューマー・シークレット。
+        endpoint: カオナビAPIエンドポイントURL。
+        timeout: カオナビAPIリクエスト・タイムアウト秒。
+
+    Returns:
+        カオナビからのレスポンス（JSON）を記録した辞書。
+        辞書のキーと値を以下に示す。
+        * access_token: アクセス・トークン。
+        * token_type: アクセス・トークンの種類。
+        * expire_in: アクセス・トークンの有効期限（秒）。
+    """
+    try:
+        return get_token(consumer_key, consumer_secret, endpoint, timeout)
+    except KaonaviApiException as exception:
+        print(f"{exception}", file=sys.stderr)
+        exit(1)
+
+
 if __name__ == "__main__":
 
     def gen_argument_parser() -> ArgumentParser:
@@ -103,14 +132,13 @@ if __name__ == "__main__":
         Returns:
             コマンドライン引数を解析するパーサー。
         """
+        # コマンドライン引数を解析するパーサーを構築
         parser = ArgumentParser(description="カオナビにAPIをリクエストします。")
         subparsers = parser.add_subparsers()
-
         # シート情報取得APIをリクエストするサブコマンド
         sheet_command = subparsers.add_parser("sheet", help="シート情報取得APIをリクエストします。")
         sheet_command.add_argument("sheet_id", type=int, help="取得するシートのシートID。")
         sheet_command.set_defaults(func=get_sheet)
-
         return parser
 
     def main():
@@ -125,8 +153,13 @@ if __name__ == "__main__":
             endpoint = get_end_point_url()
             # カオナビAPIリクエストタイムアウト秒を取得
             timeout = get_request_timeout()
+            # カオナビからアクセス・トークンを取得
+            credentials = get_access_token(
+                consumer_key, consumer_secret, endpoint, timeout
+            )
+            access_token = credentials["access_token"]
             # サブコマンドを実行
-            args.func(args, consumer_key, consumer_secret, endpoint, timeout)
+            args.func(args, access_token, endpoint, timeout)
         else:
             parser.print_help()
 
