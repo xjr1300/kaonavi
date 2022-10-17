@@ -5,6 +5,9 @@ from typing import Dict
 from dotenv import load_dotenv
 from argparse import ArgumentParser, Namespace
 
+# カオナビのAPIをリクエストするときのタイムアウト秒
+KAONAVI_REQUEST_TIMEOUT = 30
+
 # 環境変数を読み込み
 load_dotenv()
 
@@ -70,6 +73,36 @@ def get_consumer_secret() -> str:
     return consumer_key
 
 
+def get_end_point_url() -> str:
+    """環境変数からカオナビのAPIエンドポイントを取得する。
+
+    環境変数からカオナビのAPIエンド・ポイントを取得できない場合は、エラーメッセージを標準エラー出力に
+    出力して、プログラムを終了する。
+
+    Returns:
+        カオナビのAPIエンドポイント。
+    """
+    key = "KAONAVI_API_ENDPOINT_URL"
+    endpoint_url = os.getenv(key)
+    if endpoint_url == "":
+        print(f"環境変数にカオナビAPIのエンドポイント({key})が設定されていません。", file=sys.stderr)
+        exit(1)
+
+
+def get_request_timeout() -> int:
+    """環境変数からカオナビのAPIをリクエストするときの、タイムアウト秒を取得する。
+
+    環境変数からカオナビのAPIをリクエストするときのタイムアウト秒を取得できなかった場合は、デフォルトの
+    タイムアウト秒を返却する。
+    """
+    timeout = os.getenv("KAONAVI_REQUEST_TIMEOUT")
+    try:
+        timeout = int(timeout)
+    except ValueError:
+        timeout = KAONAVI_REQUEST_TIMEOUT
+    return timeout
+
+
 if __name__ == "__main__":
 
     def gen_argument_parser() -> ArgumentParser:
@@ -92,9 +125,18 @@ if __name__ == "__main__":
         parser = gen_argument_parser()
         args = parser.parse_args()
         if hasattr(args, "func"):
+            # コンシューマー・キーを取得
             consumer_key = get_consumer_key()
+            # コンシューマー・シークレットを取得
             consumer_secret = get_consumer_secret()
-            args.func(args, consumer_key, consumer_secret)
+            # カオナビAPIエンドポイントURLを取得
+            endpoint_url = get_end_point_url()
+            # カオナビAPIリクエストタイムアウト秒を取得
+            request_timeout = get_request_timeout()
+            # サブコマンドを実行
+            args.func(
+                args, consumer_key, consumer_secret, endpoint_url, request_timeout
+            )
         else:
             parser.print_help()
 
