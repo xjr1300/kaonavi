@@ -5,8 +5,8 @@ from typing import Dict
 from dotenv import load_dotenv
 from argparse import ArgumentParser
 
-from subcommands import KaonaviApiException, get_token
-from subcommands.sheets import get_sheet
+from .subcommands import KaonaviApiException, get_token
+from .subcommands.sheets import get_sheet
 
 # カオナビのAPIをリクエストするときのタイムアウト秒
 KAONAVI_REQUEST_TIMEOUT = 30

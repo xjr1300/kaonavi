@@ -4,5 +4,8 @@
     },
     "cSpell.words": [
         "kaonavi"
-    ]
+    ],
+    "terminal.integrated.env.linux": {
+        "PYTHONPATH": "${workspaceFolder}/kaonavi"
+    }
 }
