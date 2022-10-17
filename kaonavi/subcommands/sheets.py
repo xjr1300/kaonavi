@@ -3,7 +3,6 @@ from typing import Dict
 
 import requests
 
-
 from . import KaonaviApiException, call_kaonavi_api
 
 
