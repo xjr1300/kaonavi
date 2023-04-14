@@ -4,7 +4,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 # カオナビのAPIをリクエストするときのタイムアウト秒
-KAONAVI_REQUEST_TIMEOUT = 30
+KAONAVI_REQUEST_TIMEOUT: int = 30
 
 
 class KaonaviApiException(Exception):
