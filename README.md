@@ -100,7 +100,8 @@ kaonavi
 python -m kaonavi -h
 ```
 
-#### 說明
+#### 說明 <!-- markdownlint-disable-line MD024 -->
+
 本コマンドの使用方法を表示します。
 
 ### シート情報取得
@@ -109,12 +110,12 @@ python -m kaonavi -h
 python -m kaonavi sheet <sheet_id>
 ```
 
-#### 說明
+#### 說明 <!-- markdownlint-disable-line MD024 -->
 
 カオナビのシート情報取得APIを呼び出して、カオナビで定義されているシートに記録されているデータを取得します。
 データを取得するシートは、`カオナビ管理者機能トップ - 公開API v2 情報 - 操作対象の管理`で、当該シートの`取得`をチェックする必要があります。
 
-#### 引数
+#### 引数 <!-- markdownlint-disable-line MD024 -->
 
 * sheet_id: 情報を取得するシートのシートID。シートIDは、カオナビの`カオナビ管理者機能トップ - 公開API v2 情報 - 操作対象の管理`で確認できます。
 
