@@ -86,9 +86,9 @@ def get_request_timeout() -> int:
     環境変数からカオナビのAPIをリクエストするときのタイムアウト秒を取得できなかった場合は、デフォルトの
     タイムアウト秒を返却する。
     """
-    timeout = os.getenv("KAONAVI_API_TIMEOUT", "")
+    env_timeout = os.getenv("KAONAVI_API_TIMEOUT", "")
     try:
-        timeout = int(timeout)
+        timeout = int(env_timeout)
     except ValueError:
         timeout = KAONAVI_REQUEST_TIMEOUT
     return timeout
