@@ -8,5 +8,6 @@
     "**/Thumbs.db": true,
     "**/__pycache__": true
   },
-  "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
+  "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
+  "python.formatting.provider": "black"
 }
